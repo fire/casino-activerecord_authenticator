@@ -14,6 +14,7 @@ describe CASino::ActiveRecordAuthenticator do
       table: 'users',
       username_column: 'username',
       password_column: 'password',
+      password_salt_column: 'password_salt',
       pepper: pepper,
       extra_attributes: extra_attributes
     }
@@ -31,6 +32,8 @@ describe CASino::ActiveRecordAuthenticator do
         create_table :users do |t|
           t.string :username
           t.string :password
+          t.string :password_salt
+          #t.string :password_algorithm
           t.string :mail_address
         end
       end
@@ -145,6 +148,19 @@ describe CASino::ActiveRecordAuthenticator do
       end
     end
 
+    context 'support for pbkdf2 sha256' do
+      before do
+        described_class::User.create!(
+          username: 'test5',
+          password: '95022b869a6bf57779d7f5a66430b0fd6e11659400f540c3475af5ca63875f37', # password: test12345
+          password_salt: 'ffc12e9ed7b3c74f3102b1f78e99c348',
+          mail_address: 'mail@example.org')
+      end
+
+      it 'is able to handle pbkdf2:sha256 password hashes' do
+        subject.validate('test5', "test12345").should be_instance_of(Hash)
+      end
+    end
   end
 
 end
