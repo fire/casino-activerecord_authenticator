@@ -160,8 +160,16 @@ describe CASino::ActiveRecordAuthenticator do
                                       mail_address: 'mail@example.org')
       end
 
-      it 'is able to handle pbkdf2:sha256 password hashes' do
+      it 'is able to handle password hashes' do
         subject.validate('test5', "test12345").should be_instance_of(Hash)
+      end
+
+      it 'is able to deny false password' do
+        subject.validate('test5', "test12345a").should eq(false)
+      end
+
+       it 'is able to deny empty password' do
+        subject.validate('test5', "").should eq(false)
       end
     end
 
@@ -195,6 +203,8 @@ describe CASino::ActiveRecordAuthenticator do
       before do
         described_class::User.create!(
                                       username: 'test8',
+                                      password: '95022b869a6bf57779d7f5a66430b0fd6e11659400f540c3475af5ca63875f37', # password: test12345
+                                      password_salt: 'ffc12e9ed7b3c74f3102b1f78e99c348',
                                       active: 'f')
       end
 
