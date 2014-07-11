@@ -27,11 +27,14 @@ class CASino::ActiveRecordAuthenticator
   def validate(username, password)
     @model.verify_active_connections!
     user = @model.send("find_by_#{@options[:username_column]}!", username)
-    password_from_database = user.send(@options[:password_column])
-    password_salt_from_database = user.send(@options[:password_salt_column])
     unless user.send(@options[:suspended_til_column]).nil?
       return false
     end
+    if user.send(@options[:active_column]) == 'f'
+     return false
+    end
+    password_from_database = user.send(@options[:password_column])
+    password_salt_from_database = user.send(@options[:password_salt_column])
     if valid_password?(password, password_from_database, password_salt_from_database)
       { username: user.send(@options[:username_column]),
       extra_attributes: extra_attributes(user) }

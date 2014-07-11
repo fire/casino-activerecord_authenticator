@@ -16,6 +16,7 @@ describe CASino::ActiveRecordAuthenticator do
       password_column: 'password',
       password_salt_column: 'password_salt',
       suspended_til_column: 'suspended_til',
+      active_column: 'active',
       pepper: pepper,
       extra_attributes: extra_attributes
     }
@@ -35,6 +36,7 @@ describe CASino::ActiveRecordAuthenticator do
           t.string :password
           t.string :password_salt
           t.string :suspended_til
+          t.string :active
           t.string :mail_address
         end
       end
@@ -175,6 +177,35 @@ describe CASino::ActiveRecordAuthenticator do
 
       it 'is able to handle pbkdf2:sha256 banning' do
         subject.validate('test6', "test12345").should eq(false)
+      end
+    end
+
+    context 'support for ban' do
+      before do
+        described_class::User.create!(
+                                      username: 'test7',
+                                      password: '95022b869a6bf57779d7f5a66430b0fd6e11659400f540c3475af5ca63875f37', # password: test12345
+                                      password_salt: 'ffc12e9ed7b3c74f3102b1f78e99c348',
+                                      mail_address: 'mail@example.org')
+      end
+
+      it 'is able to handle pbkdf2:sha256 password hashes' do
+        subject.validate('test7', "test12345").should be_instance_of(Hash)
+      end
+    end
+
+    context 'support for disabling inactive logins' do
+      before do
+        described_class::User.create!(
+                                      username: 'test8',
+                                      password: '95022b869a6bf57779d7f5a66430b0fd6e11659400f540c3475af5ca63875f37', # password: test12345
+                                      password_salt: 'ffc12e9ed7b3c74f3102b1f78e99c348',
+                                      mail_address: 'mail@example.org',
+                                      active: 'f')
+      end
+
+      it 'is able to handle inactive users' do
+        subject.validate('test8', "test12345").should eq(false)
       end
     end
   end
