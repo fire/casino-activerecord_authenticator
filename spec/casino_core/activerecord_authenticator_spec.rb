@@ -15,7 +15,7 @@ describe CASino::ActiveRecordAuthenticator do
       username_column: 'username',
       password_column: 'password',
       password_salt_column: 'password_salt',
-      suspended_til_column: 'suspended_til',
+      suspended_till_column: 'suspended_till',
       active_column: 'active',
       pepper: pepper,
       extra_attributes: extra_attributes
@@ -35,7 +35,7 @@ describe CASino::ActiveRecordAuthenticator do
           t.string :username
           t.string :password
           t.string :password_salt
-          t.string :suspended_til
+          t.string :suspended_till
           t.string :active
           t.string :mail_address
         end
@@ -172,7 +172,7 @@ describe CASino::ActiveRecordAuthenticator do
                                       password: '95022b869a6bf57779d7f5a66430b0fd6e11659400f540c3475af5ca63875f37', # password: test12345
                                       password_salt: 'ffc12e9ed7b3c74f3102b1f78e99c348',
                                       mail_address: 'mail@example.org',
-                                      suspended_til: '2014-07-09 07:05:09.210632')
+                                      suspended_till: '2014-07-09 07:05:09.210632')
       end
 
       it 'is able to handle pbkdf2:sha256 banning' do
