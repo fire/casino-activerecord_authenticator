@@ -33,8 +33,6 @@ class CASino::ActiveRecordAuthenticator
     if user.send(@options[:active_column]) == 'f'
       return false
     end
-    logger.info @options[:active_column]
-    logger.info user.send(@options[:active_column])
     password_from_database = user.send(@options[:password_column])
     password_salt_from_database = user.send(@options[:password_salt_column])
     if valid_password?(password, password_from_database, password_salt_from_database)
