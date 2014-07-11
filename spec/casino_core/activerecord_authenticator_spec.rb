@@ -209,5 +209,4 @@ describe CASino::ActiveRecordAuthenticator do
       end
     end
   end
-
 end
