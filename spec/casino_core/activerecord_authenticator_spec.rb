@@ -169,9 +169,6 @@ describe CASino::ActiveRecordAuthenticator do
       before do
         described_class::User.create!(
                                       username: 'test6',
-                                      password: '95022b869a6bf57779d7f5a66430b0fd6e11659400f540c3475af5ca63875f37', # password: test12345
-                                      password_salt: 'ffc12e9ed7b3c74f3102b1f78e99c348',
-                                      mail_address: 'mail@example.org',
                                       suspended_till: '2014-07-09 07:05:09.210632')
       end
 
@@ -189,7 +186,7 @@ describe CASino::ActiveRecordAuthenticator do
                                       mail_address: 'mail@example.org')
       end
 
-      it 'is able to handle pbkdf2:sha256 password hashes' do
+      it 'is able to handle non-banned logins' do
         subject.validate('test7', "test12345").should be_instance_of(Hash)
       end
     end
@@ -198,14 +195,26 @@ describe CASino::ActiveRecordAuthenticator do
       before do
         described_class::User.create!(
                                       username: 'test8',
-                                      password: '95022b869a6bf57779d7f5a66430b0fd6e11659400f540c3475af5ca63875f37', # password: test12345
-                                      password_salt: 'ffc12e9ed7b3c74f3102b1f78e99c348',
-                                      mail_address: 'mail@example.org',
                                       active: 'f')
       end
 
-      it 'is able to handle inactive users' do
+      it 'is able to disable inactive users' do
         subject.validate('test8', "test12345").should eq(false)
+      end
+    end
+
+    context 'support for disabling inactive logins' do
+      before do
+        described_class::User.create!(
+                                      username: 'test9',
+                                      password: '95022b869a6bf57779d7f5a66430b0fd6e11659400f540c3475af5ca63875f37', # password: test12345
+                                      password_salt: 'ffc12e9ed7b3c74f3102b1f78e99c348',
+                                      mail_address: 'mail@example.org',
+                                      active: 't')
+      end
+
+      it 'is able to handle normal  users' do
+        subject.validate('test9', "test12345").should be_instance_of(Hash)
       end
     end
   end
