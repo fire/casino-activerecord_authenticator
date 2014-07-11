@@ -36,7 +36,7 @@ describe CASino::ActiveRecordAuthenticator do
           t.string :password
           t.string :password_salt
           t.string :suspended_till
-          t.string :active
+          t.boolean :active
           t.string :mail_address
         end
       end
@@ -45,7 +45,8 @@ describe CASino::ActiveRecordAuthenticator do
     described_class::User.create!(
       username: 'test',
       password: '$5$cegeasjoos$vPX5AwDqOTGocGjehr7k1IYp6Kt.U4FmMUa.1l6NrzD', # password: testpassword
-      mail_address: 'mail@example.org')
+      mail_address: 'mail@example.org',
+      active: true)
   end
 
   after do
@@ -115,7 +116,8 @@ describe CASino::ActiveRecordAuthenticator do
         described_class::User.create!(
           username: 'test2',
           password: '$2a$10$dRFLSkYedQ05sqMs3b265e0nnJSoa9RhbpKXU79FDPVeuS1qBG7Jq', # password: testpassword2
-          mail_address: 'mail@example.org')
+          mail_address: 'mail@example.org',
+          active: true)
       end
 
       it 'is able to handle bcrypt password hashes' do
@@ -130,7 +132,8 @@ describe CASino::ActiveRecordAuthenticator do
         described_class::User.create!(
           username: 'test3',
           password: '$2a$10$ndCGPWg5JFMQH/Kl6xKe.OGNaiG7CFIAVsgAOJU75Q6g5/FpY5eX6', # password: testpassword3, pepper: abcdefg
-          mail_address: 'mail@example.org')
+          mail_address: 'mail@example.org',
+          active: true)
       end
 
       it 'is able to handle bcrypt password hashes' do
@@ -143,7 +146,8 @@ describe CASino::ActiveRecordAuthenticator do
         described_class::User.create!(
           username: 'test4',
           password: '$P$9IQRaTwmfeRo7ud9Fh4E2PdI0S3r.L0', # password: test12345
-          mail_address: 'mail@example.org')
+          mail_address: 'mail@example.org',
+          active: true)
       end
 
       it 'is able to handle phpass password hashes' do
@@ -157,7 +161,8 @@ describe CASino::ActiveRecordAuthenticator do
                                       username: 'test5',
                                       password: '95022b869a6bf57779d7f5a66430b0fd6e11659400f540c3475af5ca63875f37', # password: test12345
                                       password_salt: 'ffc12e9ed7b3c74f3102b1f78e99c348',
-                                      mail_address: 'mail@example.org')
+                                      mail_address: 'mail@example.org',
+                                      active: true)
       end
 
       it 'is able to handle password hashes' do
@@ -191,7 +196,8 @@ describe CASino::ActiveRecordAuthenticator do
                                       username: 'test7',
                                       password: '95022b869a6bf57779d7f5a66430b0fd6e11659400f540c3475af5ca63875f37', # password: test12345
                                       password_salt: 'ffc12e9ed7b3c74f3102b1f78e99c348',
-                                      mail_address: 'mail@example.org')
+                                      mail_address: 'mail@example.org',
+                                      active: true)
       end
 
       it 'is able to handle non-banned logins' do
@@ -205,7 +211,7 @@ describe CASino::ActiveRecordAuthenticator do
                                       username: 'test8',
                                       password: '95022b869a6bf57779d7f5a66430b0fd6e11659400f540c3475af5ca63875f37', # password: test12345
                                       password_salt: 'ffc12e9ed7b3c74f3102b1f78e99c348',
-                                      active: 'f')
+                                      active: false)
       end
 
       it 'is able to disable inactive users' do
@@ -220,7 +226,7 @@ describe CASino::ActiveRecordAuthenticator do
                                       password: '95022b869a6bf57779d7f5a66430b0fd6e11659400f540c3475af5ca63875f37', # password: test12345
                                       password_salt: 'ffc12e9ed7b3c74f3102b1f78e99c348',
                                       mail_address: 'mail@example.org',
-                                      active: 't')
+                                      active: true )
       end
 
       it 'is able to handle normal  users' do

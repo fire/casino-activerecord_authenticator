@@ -30,7 +30,7 @@ class CASino::ActiveRecordAuthenticator
     if user.send(@options[:suspended_till_column])
       return false
     end
-    if user.send(@options[:active_column]) == 'f'
+    if !user.send(@options[:active_column])
       return false
     end
     password_from_database = user.send(@options[:password_column])
